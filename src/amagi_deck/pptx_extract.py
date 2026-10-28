@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Iterable, List, Optional
 
@@ -25,9 +26,17 @@ TITLE_TYPES = {PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE}
 SKIP_PLACEHOLDERS = {PP_PLACEHOLDER.SLIDE_NUMBER, PP_PLACEHOLDER.DATE, PP_PLACEHOLDER.FOOTER}
 
 
+BULLET_RE = re.compile("^[•‣⁃–—▪▫●◦·➢►✓✔*-]\\s+")
+
+
 def clean(text: str) -> str:
     """Collapse PowerPoint soft line breaks and stray whitespace."""
     return " ".join(text.replace("\v", " ").replace("\x0b", " ").split())
+
+
+def strip_bullet(text: str) -> str:
+    """Drop a bullet glyph typed into the text itself (the markdown list adds its own)."""
+    return BULLET_RE.sub("", text, count=1)
 
 
 def iter_shapes(shapes) -> Iterable:
@@ -97,8 +106,8 @@ def _chart_kind(plot) -> str:
     kind = etree.QName(plot).localname.replace("Chart", "")
     details = []
     bar_dir = plot.find("c:barDir", NS)
-    if bar_dir is not None:
-        details.append("column" if bar_dir.get("val") == "col" else "horizontal")
+    if bar_dir is not None and bar_dir.get("val") == "col":
+        kind = kind.replace("bar", "column").replace("Bar", "Column")
     grouping = plot.find("c:grouping", NS)
     if grouping is not None and grouping.get("val") not in (None, "standard"):
         details.append(grouping.get("val"))
@@ -198,7 +207,7 @@ def _links(shape) -> List[str]:
 def _text_lines(text_frame) -> List[tuple]:
     lines = []
     for para in text_frame.paragraphs:
-        text = clean(para.text)
+        text = strip_bullet(clean(para.text))
         if text:
             lines.append((para.level, text))
     return lines

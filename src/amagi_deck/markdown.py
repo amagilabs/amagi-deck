@@ -8,6 +8,10 @@ from . import __version__
 from .model import Chart, Deck, Slide, Table
 
 
+def plural(n: int, word: str) -> str:
+    return "%d %s%s" % (n, word, "" if n == 1 else "s")
+
+
 def fmt_num(v: Optional[float]) -> str:
     if v is None:
         return ""
@@ -96,11 +100,11 @@ def deck_md(deck: Deck, include_notes: bool = True) -> str:
     if deck.width_in and deck.height_in:
         size = ", %g x %g in" % (deck.width_in, deck.height_in)
     counts = [
-        "%d slides" % len(deck.slides),
+        plural(len(deck.slides), "slide"),
         "%d hidden" % sum(1 for s in deck.slides if s.hidden),
         "%d with notes" % sum(1 for s in deck.slides if s.notes),
-        "%d charts" % sum(len(s.charts) for s in deck.slides),
-        "%d tables" % sum(len(s.tables) for s in deck.slides),
+        plural(sum(len(s.charts) for s in deck.slides), "chart"),
+        plural(sum(len(s.tables) for s in deck.slides), "table"),
     ]
     lines = [
         "# %s" % title,

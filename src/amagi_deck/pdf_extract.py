@@ -9,8 +9,24 @@ from typing import Dict
 import pypdfium2 as pdfium
 
 from .model import Deck, Slide, TextBlock
+from .pptx_extract import BULLET_RE
 
 URL_RE = re.compile(r"https?://[^\s<>()\"']+")
+
+
+def join_lines(lines):
+    """Undo the PDF's visual line wrapping: a line that starts in lower case continues the
+    previous one. A typed bullet glyph always starts a new item and is dropped."""
+    out = []
+    for line in lines:
+        bullet = BULLET_RE.match(line)
+        if bullet:
+            out.append(line[bullet.end():])
+        elif out and line[:1].islower():
+            out[-1] += " " + line
+        else:
+            out.append(line)
+    return [line for line in out if line]
 
 
 def extract_pdf(path: Path) -> Deck:
@@ -31,7 +47,7 @@ def extract_pdf(path: Path) -> Deck:
             slide = Slide(number=i + 1)
             if lines:
                 slide.title = lines[0][:80]
-                body = lines[1:]
+                body = join_lines(lines[1:])
                 if body:
                     slide.text.append(TextBlock(shape="page text", lines=[(0, t) for t in body]))
             for url in URL_RE.findall(raw):

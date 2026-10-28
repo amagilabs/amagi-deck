@@ -147,7 +147,6 @@ try {
 } finally {
   if ($pres) { $pres.Close() }
   if ($before -eq 0 -and $app.Presentations.Count -eq 0) { $app.Quit() }
-  [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($app)
 }
 """
 
@@ -160,7 +159,9 @@ def _powerpoint(env_extra: Dict[str, str]) -> None:
         script.write_text(PS_SCRIPT, encoding="utf-8")
         env = dict(os.environ)
         env.update(env_extra)
-        proc = _run(["powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
+        # -Mta: under the default STA apartment, powershell.exe waits about a minute for PowerPoint
+        # to finish quitting before it exits. In MTA it returns at once and PowerPoint exits by itself.
+        proc = _run(["powershell", "-Mta", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
                      "-File", str(script)], env=env)
         if proc.returncode != 0:
             lines = [ln for ln in (proc.stderr or proc.stdout or "").splitlines() if ln.strip()]

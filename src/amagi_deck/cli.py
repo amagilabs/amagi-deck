@@ -10,6 +10,7 @@ from typing import List, Optional
 
 from . import __version__, render
 from .core import RENDERERS, DeckError, convert
+from .markdown import plural
 
 DESCRIPTION = (
     "Turn a .pptx, .key or slide PDF into one markdown file: a PNG render of every slide plus "
@@ -47,11 +48,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def summary(deck, target: str) -> str:
     n_img = sum(1 for s in deck.slides if s.image)
-    parts = ["%d slides" % len(deck.slides)]
+    parts = [plural(len(deck.slides), "slide")]
     if n_img:
-        parts.append("%d images via %s" % (n_img, deck.renderer))
-    parts.append("%d charts" % sum(len(s.charts) for s in deck.slides))
-    parts.append("%d tables" % sum(len(s.tables) for s in deck.slides))
+        parts.append("%s via %s" % (plural(n_img, "image"), deck.renderer))
+    parts.append(plural(sum(len(s.charts) for s in deck.slides), "chart"))
+    parts.append(plural(sum(len(s.tables) for s in deck.slides), "table"))
     parts.append("%d with notes" % sum(1 for s in deck.slides if s.notes))
     return "amagi-deck: wrote %s (%s)" % (target, ", ".join(parts))
 
