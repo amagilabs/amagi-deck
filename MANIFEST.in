@@ -1,0 +1,4 @@
+include LICENSE README.md SKILL.md
+graft examples
+graft tests
+global-exclude __pycache__ *.py[cod]
