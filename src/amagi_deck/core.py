@@ -18,6 +18,8 @@ PPTX_EXTS = {".pptx"}
 CONVERT_EXTS = {".key", ".ppt", ".pps", ".odp", ".pptm", ".ppsx", ".potx"}
 PDF_EXTS = {".pdf"}
 RENDERERS = ("auto", "powerpoint", "soffice", "sketch", "none")
+SKETCH_NOTE = ("slide images are sketch renders: layout is approximate and theme colors, gradients "
+               "and effects are missing. PowerPoint or LibreOffice give faithful renders.")
 
 
 class DeckError(Exception):
@@ -100,6 +102,8 @@ def _render(deck: Deck, src: Path, pptx: Optional[Path], targets: Dict[int, Path
         except render.RenderError as exc:
             raise DeckError("--render %s failed: %s" % (renderer, exc))
         deck.renderer = renderer
+        if renderer == "sketch":
+            deck.warnings.append(SKETCH_NOTE)
         return done
 
     order = []
@@ -116,10 +120,7 @@ def _render(deck: Deck, src: Path, pptx: Optional[Path], targets: Dict[int, Path
             continue
         deck.renderer = name
         if name == "sketch":
-            deck.warnings.append(
-                "slide images are sketch renders: no PowerPoint or LibreOffice was found, so layout "
-                "is approximate and theme colors, gradients and effects are missing. Install "
-                "LibreOffice for faithful renders.")
+            deck.warnings.append("no working PowerPoint or LibreOffice; " + SKETCH_NOTE)
         return done
     return {}
 
