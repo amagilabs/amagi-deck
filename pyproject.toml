@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "amagi-deck"
+version = "0.1.0"
+description = "Turn a .pptx, .key or slide PDF into one markdown file: a PNG render of every slide plus its text, speaker notes, tables and chart data, so Claude can review a deck it can't open."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "AmagiLabs (Amagisolutionsgroup, Inc.)", email = "dev@amagisolutionsgroup.com" }]
+requires-python = ">=3.9"
+dependencies = [
+    "python-pptx>=1.0",
+    "pypdfium2>=4.20",
+    "pillow>=10.1",
+    "lxml>=4.9",
+]
+keywords = ["pptx", "powerpoint", "keynote", "slides", "pitch-deck", "markdown", "pdf", "llm", "claude-code"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Topic :: Office/Business :: Office Suites",
+    "Topic :: Text Processing :: Markup :: Markdown",
+]
+
+[project.urls]
+Homepage = "https://github.com/amagilabs/amagi-deck"
+Source = "https://github.com/amagilabs/amagi-deck"
+Issues = "https://github.com/amagilabs/amagi-deck/issues"
+
+[project.scripts]
+amagi-deck = "amagi_deck.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
