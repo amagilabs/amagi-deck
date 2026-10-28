@@ -9,9 +9,9 @@ description: Use when the user hands over a slide deck (.pptx, .key, .ppt, .odp 
 
 Use this skill when the user gives you a presentation file and asks you to do something with it:
 "review my pitch deck", "what's wrong with slide 6", "turn this webinar deck into a blog post",
-"pull the numbers out of these charts", "summarize the board deck". Plain text extraction
-leaves out the layout and the chart values. amagi-deck gives you both: a rendered image of each
-slide to look at, and the chart data as a table.
+"pull the numbers out of these charts", "summarize the board deck". Text extraction alone
+leaves out the layout, and often the chart values. amagi-deck gives you a rendered image of each
+slide to look at and each chart's data as a table.
 
 ## Workflow
 
