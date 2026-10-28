@@ -36,7 +36,8 @@ amagi-deck: wrote review\pitch-deck.md (9 slides, 9 images via powerpoint, 2 cha
 ```
 
 It wrote `review/pitch-deck.md` and `review/pitch-deck_slides/slide-01.png` through
-`slide-09.png`. The run took about 7 seconds. Here is slide 4 of the markdown:
+`slide-09.png`. Runs on our Windows test machine took 7 to 15 seconds, most of it PowerPoint
+rendering the slides. Here is slide 4 of the markdown:
 
 ```markdown
 ## Slide 4: Traction: 9 months of pilot installs
@@ -81,7 +82,7 @@ Hidden slides are included and marked `(hidden)` in their heading.
 |---|---|
 | `-o FILE` | Markdown file to write. `-o -` prints to stdout. Default: `<deck name>.md` in the current folder |
 | `--slides 1-3,7` | Convert only these slides |
-| `--render none` | Text, notes and chart data only, no images. The sample deck takes about 2.5 seconds this way |
+| `--render none` | Text, notes and chart data only, no images. The sample deck takes under 3 seconds this way |
 | `--render powerpoint\|soffice\|sketch` | Pick a renderer instead of `auto` |
 | `--width 1280` | Slide image width in pixels |
 | `--images-dir DIR` | Where the PNGs go. Default: `<output name>_slides` next to the markdown |
