@@ -99,7 +99,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         sys.stdout.write(text)
         return 0
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(text, encoding="utf-8", newline="\n")
+    with open(out, "w", encoding="utf-8", newline="\n") as fh:  # write_text(newline=) is 3.10+
+        fh.write(text)
     try:
         shown = str(out.relative_to(Path.cwd()))
     except ValueError:
