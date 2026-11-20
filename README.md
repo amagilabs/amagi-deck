@@ -20,9 +20,6 @@ account or an API key.
 pipx install amagi-deck
 ```
 
-(Not yet published to PyPI. Until it is, install from GitHub:
-`pipx install git+https://github.com/amagilabs/amagi-deck@v0.1.0`.)
-
 Needs Python 3.9 or newer. For faithful slide images you also need Microsoft PowerPoint (Windows)
 or [LibreOffice](https://www.libreoffice.org) (any OS). Without either one, amagi-deck still
 writes all the text and data and draws a rough sketch of each slide (see
